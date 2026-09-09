@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>E&amp;E Visuals placeholder logo</title>
+  <g fill="none" stroke="#f2efe6" stroke-linecap="square" stroke-width="42">
+    <path d="M228 112H92v288h136M92 256h120"/>
+    <path d="M284 112h136v288H284M420 256H300"/>
+  </g>
+  <rect x="246" y="82" width="20" height="348" fill="#c9ff2f"/>
+</svg>
