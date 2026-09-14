@@ -4,6 +4,12 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 
 type Language = "de" | "en";
 
+const YOUTUBE_VIDEO_URL = "https://youtu.be/Wp6_leuJ854";
+const YOUTUBE_EMBED_URL =
+  "https://www.youtube-nocookie.com/embed/Wp6_leuJ854?autoplay=1&rel=0";
+const YOUTUBE_THUMBNAIL_URL =
+  "https://i.ytimg.com/vi/Wp6_leuJ854/maxresdefault.jpg";
+
 type ProjectMedia = {
   id: string;
   image: string;
@@ -84,16 +90,17 @@ const copy = {
       },
     ],
     showreel: {
-      eyebrow: "Motion / Showreel",
-      title: "Bewegung, Licht und Timing.",
+      eyebrow: "Latest Film",
+      title: "Volkswagen Golf VI GTI.",
       description:
-        "Kurze Filme mit klarer Idee, präzisem Rhythmus und Bildern, die auch ohne Ton funktionieren.",
-      play: "Showreel abspielen",
-      duration: "00:58",
-      modalTitle: "E&E Visuals Showreel",
+        "Ein cinematic Automotive Film über Charakter, Bewegung und die zeitlose Präsenz des Golf VI GTI.",
+      play: "Film ansehen",
+      duration: "YouTube",
+      modalTitle: "Volkswagen Golf VI GTI",
       modalText:
-        "Demo-Bereich: Hier wird später dein komprimiertes Showreel mit Posterbild und Untertiteln eingebunden.",
-      close: "Showreel schließen",
+        "Cinematic Automotive Film von E&E Visuals · Augsburg, Deutschland.",
+      youtubeLink: "Auf YouTube ansehen",
+      close: "Film schließen",
     },
     services: {
       eyebrow: "Leistungen",
@@ -174,7 +181,7 @@ const copy = {
       legal: ["Impressum", "Datenschutz", "Cookie-Einstellungen"],
       cookie:
         "Dieser Prototyp setzt keine optionalen Cookies ein. Vor der Veröffentlichung muss das je nach eingebundenen Diensten erneut geprüft werden.",
-      youtube: "YouTube-Link ergänzen",
+      youtube: "YouTube",
     },
     common: {
       instagram: "Instagram",
@@ -226,16 +233,17 @@ const copy = {
       },
     ],
     showreel: {
-      eyebrow: "Motion / Showreel",
-      title: "Movement, light and timing.",
+      eyebrow: "Latest Film",
+      title: "Volkswagen Golf VI GTI.",
       description:
-        "Short films with a clear idea, precise rhythm and imagery that works even without sound.",
-      play: "Play showreel",
-      duration: "00:58",
-      modalTitle: "E&E Visuals Showreel",
+        "A cinematic automotive film shaped around character, movement and the timeless presence of the Golf VI GTI.",
+      play: "Watch film",
+      duration: "YouTube",
+      modalTitle: "Volkswagen Golf VI GTI",
       modalText:
-        "Demo area: your compressed showreel, poster image and captions will be connected here.",
-      close: "Close showreel",
+        "A cinematic automotive film by E&E Visuals · Augsburg, Germany.",
+      youtubeLink: "Watch on YouTube",
+      close: "Close film",
     },
     services: {
       eyebrow: "Services",
@@ -316,7 +324,7 @@ const copy = {
       legal: ["Legal notice", "Privacy", "Cookie settings"],
       cookie:
         "This prototype does not use optional cookies. Reassess this before launch when external services are connected.",
-      youtube: "Add YouTube link",
+      youtube: "YouTube",
     },
     common: {
       instagram: "Instagram",
@@ -666,11 +674,11 @@ export default function Home() {
           aria-haspopup="dialog"
         >
           <img
-            src={projectMedia[2].image}
+            src={YOUTUBE_THUMBNAIL_URL}
             alt=""
             loading="lazy"
-            width="2200"
-            height="1467"
+            width="1280"
+            height="720"
           />
           <span className="showreel__veil" aria-hidden="true" />
           <span className="showreel__copy">
@@ -683,7 +691,7 @@ export default function Home() {
             {t.showreel.play}
             <small>{t.showreel.duration}</small>
           </span>
-          <span className="media-demo-label">{t.work.demo}</span>
+          <span className="media-demo-label">YouTube · 2026</span>
         </button>
       </section>
 
@@ -846,7 +854,9 @@ export default function Home() {
           <a href="https://www.instagram.com/eande.visuals/" target="_blank" rel="noreferrer">
             Instagram ↗
           </a>
-          <span>{t.footer.youtube}</span>
+          <a href={YOUTUBE_VIDEO_URL} target="_blank" rel="noreferrer">
+            {t.footer.youtube} ↗
+          </a>
           <a href="/impressum">{t.footer.legal[0]}</a>
           <a href="/datenschutz">{t.footer.legal[1]}</a>
           <button type="button" onClick={() => setCookieNotice(true)}>
@@ -879,12 +889,25 @@ export default function Home() {
               ×
             </button>
             <div className="media-modal__frame">
-              <img src={projectMedia[2].image} alt="" />
-              <span className="media-modal__play" aria-hidden="true">▶</span>
+              <iframe
+                src={YOUTUBE_EMBED_URL}
+                title={t.showreel.modalTitle}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
             </div>
             <div>
               <h2 id="modal-title">{t.showreel.modalTitle}</h2>
               <p>{t.showreel.modalText}</p>
+              <a
+                className="media-modal__youtube"
+                href={YOUTUBE_VIDEO_URL}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {t.showreel.youtubeLink} ↗
+              </a>
             </div>
           </div>
         </div>

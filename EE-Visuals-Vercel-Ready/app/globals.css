@@ -1329,6 +1329,12 @@ a {
   width: 100%;
 }
 
+.media-modal__frame iframe {
+  border: 0;
+  height: 100%;
+  width: 100%;
+}
+
 .media-modal__play {
   align-items: center;
   background: var(--color-accent);
@@ -1360,6 +1366,18 @@ a {
   line-height: 1.6;
   margin: 0;
   max-width: 720px;
+}
+
+.media-modal__youtube {
+  border-bottom: 1px solid var(--color-accent);
+  color: var(--color-accent);
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-top: 20px;
+  padding-bottom: 7px;
+  text-transform: uppercase;
 }
 
 .cookie-note {
