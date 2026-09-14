@@ -1,6 +1,7 @@
 "use client";
 
 import { type FormEvent, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 type Language = "de" | "en";
 
@@ -676,7 +677,7 @@ export default function Home() {
       heroScroll.classList.toggle("is-film-focus", rawProgress > 0.42);
 
       heroScroll.style.setProperty("--hero-progress", progress.toFixed(4));
-      heroScroll.style.setProperty("--hero-scale", (1 + progress * 0.145).toFixed(4));
+      heroScroll.style.setProperty("--hero-scale", (1 + progress * 0.08).toFixed(4));
       heroScroll.style.setProperty("--hero-media-x", `${(-progress * 2.2).toFixed(3)}%`);
       heroScroll.style.setProperty("--hero-media-y", `${(progress * 1.1).toFixed(3)}%`);
       heroScroll.style.setProperty("--hero-copy-opacity", (1 - copyExit).toFixed(4));
@@ -810,11 +811,14 @@ export default function Home() {
       <div className="hero-scroll" id="top" ref={heroScrollRef}>
         <section className="hero" aria-labelledby="hero-title">
           <div className="hero__media" aria-hidden="true">
-            <img
+            <Image
               src={YOUTUBE_THUMBNAIL_URL}
               alt=""
-              width="1280"
-              height="720"
+              fill
+              priority
+              fetchPriority="high"
+              quality={95}
+              sizes="100vw"
             />
           </div>
           <div className="hero__shade" aria-hidden="true" />

@@ -250,7 +250,10 @@ a {
 
 .hero__media img {
   animation: hero-image-in 1.15s var(--ease-out) both;
+  backface-visibility: hidden;
+  filter: contrast(1.055) saturate(1.035);
   height: 100%;
+  image-rendering: -webkit-optimize-contrast;
   object-fit: cover;
   object-position: center;
   transform: translate3d(var(--hero-media-x), var(--hero-media-y), 0) scale(var(--hero-scale));
