@@ -11,6 +11,14 @@ export default function MotionDirector() {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const revealSelectors = [
+      ".ee-section-head",
+      ".ee-project",
+      ".ee-profile-image",
+      ".ee-profile-copy",
+      ".ee-service-list article",
+      ".ee-contact > div",
+      ".ee-contact-links",
+      ".ee-footer > *",
       ".section-intro",
       ".project-card",
       ".journal-card",
@@ -42,6 +50,8 @@ export default function MotionDirector() {
     );
 
     const groupedSelectors = [
+      ".ee-project-grid",
+      ".ee-service-list",
       ".project-grid",
       ".journal-grid",
       ".service-list",
@@ -86,14 +96,14 @@ export default function MotionDirector() {
 
     const mediaElements = Array.from(
       document.querySelectorAll<HTMLElement>(
-        ".project-card figure, .journal-card figure, .showreel__button, .about__portrait, .case-study-image",
+        ".ee-project-media, .ee-profile-image, .project-card figure, .journal-card figure, .showreel__button, .about__portrait, .case-study-image",
       ),
     );
     mediaElements.forEach((element) => element.classList.add("motion-media"));
 
     const progressSections = Array.from(
       document.querySelectorAll<HTMLElement>(
-        ".work-section, .instagram-journal, .services, .about, .process, .contact, .case-study-brief, .case-study-method, .case-study-output",
+        ".ee-projects, .ee-profile, .ee-services, .ee-contact, .work-section, .instagram-journal, .services, .about, .process, .contact, .case-study-brief, .case-study-method, .case-study-output",
       ),
     );
 

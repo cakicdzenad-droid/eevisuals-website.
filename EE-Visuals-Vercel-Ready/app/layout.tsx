@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "./redesign.css";
 import MotionDirector from "./motion-director";
 
 const geistSans = Geist({
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
     template: "%s — E&E Visuals",
   },
   description:
-    "Cinematic Fotografie, Film und Visual Content für Automotive, Produkte, Unternehmen, Immobilien und Events — aus Augsburg, verfügbar in Bayern und deutschlandweit.",
+    "Cinematic Fotografie, Film und Visual Content für Automotive, Marken, Menschen und Events — aus Augsburg, verfügbar in Bayern und deutschlandweit.",
   keywords: [
     "Fotograf Augsburg",
     "Videograf Augsburg",
@@ -45,8 +46,9 @@ export const metadata: Metadata = {
     follow: true,
   },
   icons: {
-    icon: "/logo-placeholder.svg",
-    shortcut: "/logo-placeholder.svg",
+    icon: "/assets/brand/eevisuals-logo-instagram.jpg",
+    shortcut: "/assets/brand/eevisuals-logo-instagram.jpg",
+    apple: "/assets/brand/eevisuals-logo-instagram.jpg",
   },
 };
 
