@@ -13,6 +13,8 @@ export default function MotionDirector() {
     const revealSelectors = [
       ".section-intro",
       ".project-card",
+      ".journal-card",
+      ".journal-follow",
       ".showreel__copy",
       ".showreel__play",
       ".service-row",
@@ -41,6 +43,7 @@ export default function MotionDirector() {
 
     const groupedSelectors = [
       ".project-grid",
+      ".journal-grid",
       ".service-list",
       ".process-list",
       ".case-study-method__grid",
@@ -83,14 +86,14 @@ export default function MotionDirector() {
 
     const mediaElements = Array.from(
       document.querySelectorAll<HTMLElement>(
-        ".project-card figure, .showreel__button, .about__portrait, .case-study-image",
+        ".project-card figure, .journal-card figure, .showreel__button, .about__portrait, .case-study-image",
       ),
     );
     mediaElements.forEach((element) => element.classList.add("motion-media"));
 
     const progressSections = Array.from(
       document.querySelectorAll<HTMLElement>(
-        ".work-section, .services, .about, .process, .contact, .case-study-brief, .case-study-method, .case-study-output",
+        ".work-section, .instagram-journal, .services, .about, .process, .contact, .case-study-brief, .case-study-method, .case-study-output",
       ),
     );
 

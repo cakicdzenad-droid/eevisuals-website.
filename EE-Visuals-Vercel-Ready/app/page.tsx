@@ -19,6 +19,18 @@ type ProjectMedia = {
   caseStudyHref?: string;
 };
 
+type InstagramStory = {
+  image: string;
+  href: string;
+  layout: "portrait" | "wide" | "square";
+  copy: Record<Language, {
+    meta: string;
+    title: string;
+    text: string;
+    alt: string;
+  }>;
+};
+
 const projectMedia: ProjectMedia[] = [
   {
     id: "audi-a7-quiet-power",
@@ -46,6 +58,237 @@ const projectMedia: ProjectMedia[] = [
   },
 ];
 
+const instagramStories: InstagramStory[] = [
+  {
+    image: "/assets/instagram/instagram-01-DckmBQesYbq.jpg",
+    href: "https://www.instagram.com/eande.visuals/p/DckmBQesYbq/",
+    layout: "portrait",
+    copy: {
+      de: {
+        meta: "Porsche · Motorsport",
+        title: "Geschwindigkeit ohne Farbe.",
+        text: "Ein klassischer Porsche im Mitzieher — die Bewegung bleibt spürbar, obwohl ein einziger Moment eingefroren ist.",
+        alt: "Klassischer Porsche als Schwarz-Weiß-Panningaufnahme auf der Rennstrecke",
+      },
+      en: {
+        meta: "Porsche · Motorsport",
+        title: "Speed without colour.",
+        text: "A classic Porsche captured in a pan — motion stays tangible inside a single frozen moment.",
+        alt: "Classic Porsche in a black-and-white panning shot on the racetrack",
+      },
+    },
+  },
+  {
+    image: "/assets/instagram/instagram-02-Dcnb7JLssy7.jpg",
+    href: "https://www.instagram.com/eande.visuals/p/Dcnb7JLssy7/",
+    layout: "portrait",
+    copy: {
+      de: {
+        meta: "Porsche 911 · Detail",
+        title: "Linien, Lack, Legende.",
+        text: "Von oben wird der 911 zur grafischen Form — Felge, Reflexion und Silhouette erzählen den Charakter im Detail.",
+        alt: "Schwarzer klassischer Porsche 911 von oben fotografiert",
+      },
+      en: {
+        meta: "Porsche 911 · Detail",
+        title: "Lines, paint, legend.",
+        text: "From above, the 911 becomes a graphic form — wheel, reflection and silhouette reveal its character.",
+        alt: "Black classic Porsche 911 photographed from above",
+      },
+    },
+  },
+  {
+    image: "/assets/instagram/instagram-03-DciKTSVs7Vu.jpg",
+    href: "https://www.instagram.com/eande.visuals/p/DciKTSVs7Vu/",
+    layout: "portrait",
+    copy: {
+      de: {
+        meta: "Salzburgring · Track",
+        title: "Der Moment vor der Kurve.",
+        text: "Distanz, Asphalt und eine klare Linie lassen die Rennstrecke atmen, bevor das Fahrzeug den Bildraum durchschneidet.",
+        alt: "Klassischer Rennwagen auf dem Salzburgring in Schwarz-Weiß",
+      },
+      en: {
+        meta: "Salzburgring · Track",
+        title: "The moment before the corner.",
+        text: "Distance, asphalt and a clean line let the circuit breathe before the car cuts through the frame.",
+        alt: "Classic race car at the Salzburgring in black and white",
+      },
+    },
+  },
+  {
+    image: "/assets/instagram/instagram-04-DcMLt2jMUjU.jpg",
+    href: "https://www.instagram.com/eande.visuals/p/DcMLt2jMUjU/",
+    layout: "square",
+    copy: {
+      de: {
+        meta: "BMW · Panning",
+        title: "Präzision bei Tempo.",
+        text: "Der Hintergrund löst sich in Bewegung auf, während Karosserie und Fahrer im entscheidenden Augenblick stabil bleiben.",
+        alt: "Schwarzer BMW als dynamische Panningaufnahme auf der Straße",
+      },
+      en: {
+        meta: "BMW · Panning",
+        title: "Precision at speed.",
+        text: "The background dissolves into motion while bodywork and driver stay composed at the decisive instant.",
+        alt: "Black BMW in a dynamic panning shot on the road",
+      },
+    },
+  },
+  {
+    image: "/assets/instagram/instagram-05-DbDOxllDDqT.jpg",
+    href: "https://www.instagram.com/eande.visuals/p/DbDOxllDDqT/",
+    layout: "portrait",
+    copy: {
+      de: {
+        meta: "Toyota RAV4 · Landscape",
+        title: "Offene Horizonte.",
+        text: "Kein Parkplatz, kein künstlicher Glanz — nur Fahrzeug, Wiese und ein Himmel, der die ganze Szene trägt.",
+        alt: "Toyota RAV4 in einer hohen Wiese unter dramatischem Himmel",
+      },
+      en: {
+        meta: "Toyota RAV4 · Landscape",
+        title: "Open horizons.",
+        text: "No parking lot and no artificial gloss — only the vehicle, the meadow and a sky carrying the scene.",
+        alt: "Toyota RAV4 in tall grass beneath a dramatic sky",
+      },
+    },
+  },
+  {
+    image: "/assets/instagram/instagram-06-DcYCo4_DA5T.jpg",
+    href: "https://www.instagram.com/eande.visuals/p/DcYCo4_DA5T/",
+    layout: "wide",
+    copy: {
+      de: {
+        meta: "Motorsport · Bewegung",
+        title: "Farbe in Bewegung.",
+        text: "Blau, Rot und Geschwindigkeit setzen einen lauten Akzent in einer Serie, die ganz vom Rhythmus der Strecke lebt.",
+        alt: "Blauer Rennwagen mit roten Felgen in einer Panningaufnahme",
+      },
+      en: {
+        meta: "Motorsport · Motion",
+        title: "Colour in motion.",
+        text: "Blue, red and speed create a loud accent in a series driven entirely by the rhythm of the circuit.",
+        alt: "Blue race car with red wheels in a panning shot",
+      },
+    },
+  },
+  {
+    image: "/assets/instagram/instagram-07-DcJe2QKs-jk.jpg",
+    href: "https://www.instagram.com/eande.visuals/p/DcJe2QKs-jk/",
+    layout: "wide",
+    copy: {
+      de: {
+        meta: "Kia Sorento · Off-road",
+        title: "Abseits der Straße.",
+        text: "Staub, Stein und direkte Frontperspektive zeigen ein SUV dort, wo Funktion sichtbar und glaubwürdig wird.",
+        alt: "Kia Sorento fährt frontal über eine staubige Off-road-Strecke",
+      },
+      en: {
+        meta: "Kia Sorento · Off-road",
+        title: "Beyond the road.",
+        text: "Dust, stone and a direct front angle place the SUV where capability becomes visible and credible.",
+        alt: "Kia Sorento driving head-on across a dusty off-road track",
+      },
+    },
+  },
+  {
+    image: "/assets/instagram/instagram-08-Da-DK1PjIK8.jpg",
+    href: "https://www.instagram.com/eande.visuals/p/Da-DK1PjIK8/",
+    layout: "wide",
+    copy: {
+      de: {
+        meta: "Audi A7 · Interior",
+        title: "Ruhe im Innenraum.",
+        text: "Offene Tür, klare Flächen und weiches Licht machen aus Technik einen ruhigen, einladenden Raum.",
+        alt: "Hochwertiger Innenraum eines Audi A7 mit geöffneter Fahrertür",
+      },
+      en: {
+        meta: "Audi A7 · Interior",
+        title: "Stillness inside.",
+        text: "An open door, clean surfaces and soft light turn technology into a calm, inviting space.",
+        alt: "Premium Audi A7 interior viewed through the open driver door",
+      },
+    },
+  },
+  {
+    image: "/assets/instagram/instagram-09-Db9NbNgMyw_.jpg",
+    href: "https://www.instagram.com/eande.visuals/p/Db9NbNgMyw_/",
+    layout: "portrait",
+    copy: {
+      de: {
+        meta: "Eclipse · Augsburg",
+        title: "Wenn das Licht verstummt.",
+        text: "Ein kurzer Augenblick zwischen Sonnenuntergang und Schatten — beobachtet, gewartet und im richtigen Moment festgehalten.",
+        alt: "Roter Sonnenuntergang mit Silhouetten und Kondensstreifen am Himmel",
+      },
+      en: {
+        meta: "Eclipse · Augsburg",
+        title: "When the light falls silent.",
+        text: "A brief instant between sunset and shadow — observed, anticipated and captured at exactly the right moment.",
+        alt: "Red sunset with silhouettes and aircraft trails in the sky",
+      },
+    },
+  },
+  {
+    image: "/assets/instagram/instagram-10-Db48n23DLE8.jpg",
+    href: "https://www.instagram.com/eande.visuals/p/Db48n23DLE8/",
+    layout: "portrait",
+    copy: {
+      de: {
+        meta: "Portrait · Winter",
+        title: "Nähe im kalten Licht.",
+        text: "Zwischen Schal, Bergluft und zurückhaltenden Farben bleibt der Blick der wärmste Punkt des Bildes.",
+        alt: "Winterportrait einer Frau mit Mütze und Schal vor einer Berglandschaft",
+      },
+      en: {
+        meta: "Portrait · Winter",
+        title: "Closeness in cold light.",
+        text: "Between scarf, mountain air and restrained colour, the eyes remain the warmest point in the frame.",
+        alt: "Winter portrait of a woman in a hat and scarf before a mountain landscape",
+      },
+    },
+  },
+  {
+    image: "/assets/instagram/instagram-11-Db-KuIAM3lE.jpg",
+    href: "https://www.instagram.com/eande.visuals/p/Db-KuIAM3lE/",
+    layout: "portrait",
+    copy: {
+      de: {
+        meta: "Nightscape · Monument",
+        title: "Unter einem weiten Himmel.",
+        text: "Das Monument bleibt still, während Sterne und Zeit über ihm eine zweite, kaum sichtbare Bewegung zeichnen.",
+        alt: "Monument und Bäume unter einem klaren Sternenhimmel bei Nacht",
+      },
+      en: {
+        meta: "Nightscape · Monument",
+        title: "Beneath an open sky.",
+        text: "The monument stays still while stars and time draw a second, barely visible movement above it.",
+        alt: "Monument and trees beneath a clear starry night sky",
+      },
+    },
+  },
+  {
+    image: "/assets/instagram/instagram-12-DbBcZiDM2OM.jpg",
+    href: "https://www.instagram.com/eande.visuals/p/DbBcZiDM2OM/",
+    layout: "wide",
+    copy: {
+      de: {
+        meta: "Audi A7 · Editorial",
+        title: "Quiet Power.",
+        text: "Der A7 steht zwischen Straße und offenem Himmel — elegant, kontrolliert und ohne unnötige Inszenierung.",
+        alt: "Silberner Audi A7 auf einer ruhigen Straße unter bewölktem Himmel",
+      },
+      en: {
+        meta: "Audi A7 · Editorial",
+        title: "Quiet Power.",
+        text: "The A7 sits between road and open sky — elegant, controlled and free from unnecessary staging.",
+        alt: "Silver Audi A7 on a quiet road beneath a cloudy sky",
+      },
+    },
+  },
+];
+
 const copy = {
   de: {
     nav: ["Arbeiten", "Leistungen", "Über mich", "Kontakt"],
@@ -58,7 +301,7 @@ const copy = {
       location: "Augsburg, Deutschland",
       focus: "Automotive · Produkt · Unternehmen · Immobilien · Events",
       scroll: "Ausgewählte Arbeiten",
-      demo: "Originalarbeit · Audi A7 Sportback",
+      demo: "Latest Film · Volkswagen Golf VI GTI",
     },
     work: {
       eyebrow: "Ausgewählte Arbeiten",
@@ -101,6 +344,14 @@ const copy = {
         "Cinematic Automotive Film von E&E Visuals · Augsburg, Deutschland.",
       youtubeLink: "Auf YouTube ansehen",
       close: "Film schließen",
+    },
+    journal: {
+      eyebrow: "Instagram Journal",
+      title: "Zwölf Bilder. Zwölf kurze Geschichten.",
+      intro:
+        "Veröffentlichte Arbeiten zwischen Rennstrecke, Straße, Landschaft und Portrait — als visuelles Journal statt klassischem Social-Media-Grid.",
+      open: "Original auf Instagram",
+      follow: "Mehr Arbeiten auf Instagram",
     },
     services: {
       eyebrow: "Leistungen",
@@ -201,7 +452,7 @@ const copy = {
       location: "Augsburg, Germany",
       focus: "Automotive · Product · Business · Real Estate · Events",
       scroll: "Selected work",
-      demo: "Original work · Audi A7 Sportback",
+      demo: "Latest Film · Volkswagen Golf VI GTI",
     },
     work: {
       eyebrow: "Selected work",
@@ -244,6 +495,14 @@ const copy = {
         "A cinematic automotive film by E&E Visuals · Augsburg, Germany.",
       youtubeLink: "Watch on YouTube",
       close: "Close film",
+    },
+    journal: {
+      eyebrow: "Instagram Journal",
+      title: "Twelve images. Twelve short stories.",
+      intro:
+        "Published work shaped by racetracks, roads, landscapes and portraits — presented as a visual journal instead of a conventional social grid.",
+      open: "View original on Instagram",
+      follow: "More work on Instagram",
     },
     services: {
       eyebrow: "Services",
@@ -385,7 +644,7 @@ export default function Home() {
       animationFrame = 0;
 
       if (reducedMotion.matches) {
-        heroScroll.classList.remove("is-audi-focus");
+        heroScroll.classList.remove("is-film-focus");
         heroScroll.style.setProperty("--hero-progress", "0");
         heroScroll.style.setProperty("--hero-scale", "1");
         heroScroll.style.setProperty("--hero-media-x", "0%");
@@ -414,7 +673,7 @@ export default function Home() {
       const frameEnter = range(rawProgress, 0.28, 0.68);
       const footerExit = range(rawProgress, 0.08, 0.38);
 
-      heroScroll.classList.toggle("is-audi-focus", rawProgress > 0.42);
+      heroScroll.classList.toggle("is-film-focus", rawProgress > 0.42);
 
       heroScroll.style.setProperty("--hero-progress", progress.toFixed(4));
       heroScroll.style.setProperty("--hero-scale", (1 + progress * 0.145).toFixed(4));
@@ -552,10 +811,10 @@ export default function Home() {
         <section className="hero" aria-labelledby="hero-title">
           <div className="hero__media" aria-hidden="true">
             <img
-              src="/assets/audi-a7/audi-a7-rear.jpeg"
+              src={YOUTUBE_THUMBNAIL_URL}
               alt=""
-              width="2200"
-              height="1467"
+              width="1280"
+              height="720"
             />
           </div>
           <div className="hero__shade" aria-hidden="true" />
@@ -588,18 +847,20 @@ export default function Home() {
             </div>
           </div>
 
-          <a
-            className="hero__audi-story"
-            href={`/work/audi-a7?lang=${language}`}
-            aria-label={`${t.projects[0].title} — ${t.work.view}`}
+          <button
+            className="hero__film-story"
+            type="button"
+            onClick={() => setShowreelOpen(true)}
+            aria-haspopup="dialog"
+            aria-label={`${t.showreel.title} — ${t.showreel.play}`}
           >
-            <span className="hero__audi-kicker">01 / {t.projects[0].category}</span>
+            <span className="hero__film-kicker">01 / {t.showreel.eyebrow}</span>
             <strong aria-hidden="true">
-              <span>AUDI</span>
-              <em>A7</em>
+              <span>GOLF VI</span>
+              <em>GTI</em>
             </strong>
-            <span className="hero__audi-link">{t.work.view} ↗</span>
-          </a>
+            <span className="hero__film-link">{t.showreel.play} ▶</span>
+          </button>
 
           <div className="hero__footer">
             <p>{t.hero.focus}</p>
@@ -666,33 +927,58 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="showreel section-shell" aria-labelledby="showreel-title">
-        <button
-          className="showreel__button"
-          type="button"
-          onClick={() => setShowreelOpen(true)}
-          aria-haspopup="dialog"
+      <section className="instagram-journal section-shell" aria-labelledby="journal-title">
+        <div className="section-intro journal-intro">
+          <p className="section-label">02 / {t.journal.eyebrow}</p>
+          <div>
+            <h2 id="journal-title">{t.journal.title}</h2>
+            <p>{t.journal.intro}</p>
+          </div>
+        </div>
+
+        <div className="journal-grid">
+          {instagramStories.map((story, index) => {
+            const storyCopy = story.copy[language];
+            return (
+              <article
+                className={`journal-card journal-card--${story.layout}`}
+                key={story.href}
+              >
+                <a href={story.href} target="_blank" rel="noreferrer">
+                  <figure>
+                    <img
+                      src={story.image}
+                      alt={storyCopy.alt}
+                      loading="lazy"
+                      width="1280"
+                      height="1600"
+                    />
+                    <figcaption>
+                      <span>{storyCopy.meta}</span>
+                      <span>{String(index + 1).padStart(2, "0")}</span>
+                    </figcaption>
+                  </figure>
+                  <div className="journal-card__copy">
+                    <p>{storyCopy.meta}</p>
+                    <h3>{storyCopy.title}</h3>
+                    <p>{storyCopy.text}</p>
+                    <span>{t.journal.open} ↗</span>
+                  </div>
+                </a>
+              </article>
+            );
+          })}
+        </div>
+
+        <a
+          className="journal-follow"
+          href="https://www.instagram.com/eande.visuals/"
+          target="_blank"
+          rel="noreferrer"
         >
-          <img
-            src={YOUTUBE_THUMBNAIL_URL}
-            alt=""
-            loading="lazy"
-            width="1280"
-            height="720"
-          />
-          <span className="showreel__veil" aria-hidden="true" />
-          <span className="showreel__copy">
-            <span className="section-label">02 / {t.showreel.eyebrow}</span>
-            <strong id="showreel-title">{t.showreel.title}</strong>
-            <span>{t.showreel.description}</span>
-          </span>
-          <span className="showreel__play">
-            <i aria-hidden="true">▶</i>
-            {t.showreel.play}
-            <small>{t.showreel.duration}</small>
-          </span>
-          <span className="media-demo-label">YouTube · 2026</span>
-        </button>
+          <span>@eande.visuals</span>
+          <strong>{t.journal.follow} ↗</strong>
+        </a>
       </section>
 
       <section className="services section-shell" id="services" aria-labelledby="services-title">
