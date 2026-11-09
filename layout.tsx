@@ -1,0 +1,76 @@
+import type { Metadata } from "next";
+import { Anton, Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import "./redesign.css";
+import MotionDirector from "./motion-director";
+
+const contactSheetDisplay = Anton({
+  variable: "--font-contact-sheet",
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://eevisuals.de"),
+  title: {
+    default: "E&E Visuals — Fotografie & Film aus Augsburg",
+    template: "%s — E&E Visuals",
+  },
+  description:
+    "Cinematic Fotografie, Film und Visual Content für Automotive, Marken, Menschen und Events — aus Augsburg, verfügbar in Bayern und deutschlandweit.",
+  keywords: [
+    "Fotograf Augsburg",
+    "Videograf Augsburg",
+    "Automotive Fotografie",
+    "Produkt Fotografie",
+    "Cinematic Video",
+    "E&E Visuals",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "E&E Visuals — Fotografie & Film aus Augsburg",
+    description:
+      "Cinematic Fotografie und Film für Fahrzeuge, Produkte, Unternehmen, Immobilien und Events.",
+    locale: "de_DE",
+    type: "website",
+    siteName: "E&E Visuals",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  icons: {
+    icon: "/assets/brand/eevisuals-logo-instagram.jpg",
+    shortcut: "/assets/brand/eevisuals-logo-instagram.jpg",
+    apple: "/assets/brand/eevisuals-logo-instagram.jpg",
+  },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="de">
+      <body
+        className={`${contactSheetDisplay.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
+        <MotionDirector />
+      </body>
+    </html>
+  );
+}
