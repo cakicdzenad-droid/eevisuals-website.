@@ -1,11 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 type Language = "de" | "en";
 type ProjectKind = "image" | "gallery" | "video";
-type ProjectLayout = "feature" | "wide" | "tall" | "square";
 
 type LocalizedProject = {
   category: string;
@@ -20,7 +19,6 @@ type Project = {
   gallery?: string[];
   video?: string;
   kind: ProjectKind;
-  layout: ProjectLayout;
   year: string;
   copy: Record<Language, LocalizedProject>;
 };
@@ -33,7 +31,9 @@ const YOUTUBE_THUMBNAIL_URL =
   "https://i.ytimg.com/vi/Wp6_leuJ854/maxresdefault.jpg";
 const BRAND_LOGO = "/assets/brand/eevisuals-logo-instagram.jpg";
 
-const projectImageSizes = [100, 35, 70, 45, 60, 70, 35, 35, 70, 45, 60];
+const REC_PORTRAIT = "/assets/profile/dzenad-rec.webp";
+const CATEGORY_IMAGE_SIZES = "(max-width: 700px) 46vw, (max-width: 1500px) 25vw, 360px";
+const PROJECT_IMAGE_SIZES = "(max-width: 600px) 78vw, (max-width: 900px) 47vw, (max-width: 1440px) 32vw, 474px";
 
 function isSmallImage(source: string) {
   return source.startsWith("/assets/instagram/instagram-") ||
@@ -45,7 +45,6 @@ const projects: Project[] = [
     id: "golf-vi-gti",
     cover: YOUTUBE_THUMBNAIL_URL,
     kind: "video",
-    layout: "feature",
     year: "2026",
     copy: {
       de: {
@@ -68,7 +67,6 @@ const projects: Project[] = [
     id: "porsche-circuit-motion",
     cover: "/assets/instagram/porsche-panning-01.jpg",
     kind: "image",
-    layout: "tall",
     year: "2026",
     copy: {
       de: {
@@ -97,7 +95,6 @@ const projects: Project[] = [
       "/assets/instagram/instagram-05-DbDOxllDDqT.jpg",
     ],
     kind: "gallery",
-    layout: "wide",
     year: "2026",
     copy: {
       de: {
@@ -120,7 +117,6 @@ const projects: Project[] = [
     id: "porsche-geometry",
     cover: "/assets/instagram/instagram-02-Dcnb7JLssy7.jpg",
     kind: "image",
-    layout: "square",
     year: "2026",
     copy: {
       de: {
@@ -143,7 +139,6 @@ const projects: Project[] = [
     id: "salzburgring-before-the-corner",
     cover: "/assets/instagram/instagram-03-DciKTSVs7Vu.jpg",
     kind: "image",
-    layout: "square",
     year: "2026",
     copy: {
       de: {
@@ -166,7 +161,6 @@ const projects: Project[] = [
     id: "bmw-speed-study",
     cover: "/assets/instagram/instagram-04-DcMLt2jMUjU.jpg",
     kind: "image",
-    layout: "wide",
     year: "2026",
     copy: {
       de: {
@@ -189,7 +183,6 @@ const projects: Project[] = [
     id: "track-pulse",
     cover: "/assets/instagram/instagram-06-DcYCo4_DA5T.jpg",
     kind: "image",
-    layout: "wide",
     year: "2026",
     copy: {
       de: {
@@ -212,7 +205,6 @@ const projects: Project[] = [
     id: "kia-beyond-the-road",
     cover: "/assets/instagram/instagram-07-DcJe2QKs-jk.jpg",
     kind: "image",
-    layout: "tall",
     year: "2026",
     copy: {
       de: {
@@ -235,7 +227,6 @@ const projects: Project[] = [
     id: "eclipse-afterlight",
     cover: "/assets/instagram/instagram-09-Db9NbNgMyw_.jpg",
     kind: "image",
-    layout: "tall",
     year: "2026",
     copy: {
       de: {
@@ -258,7 +249,6 @@ const projects: Project[] = [
     id: "winter-portrait",
     cover: "/assets/instagram/instagram-10-Db48n23DLE8.jpg",
     kind: "image",
-    layout: "square",
     year: "2026",
     copy: {
       de: {
@@ -281,7 +271,6 @@ const projects: Project[] = [
     id: "monument-under-stars",
     cover: "/assets/instagram/instagram-11-Db-KuIAM3lE.jpg",
     kind: "image",
-    layout: "wide",
     year: "2026",
     copy: {
       de: {
@@ -305,7 +294,6 @@ const projects: Project[] = [
     cover: "/assets/reels/polo-watch.jpg",
     video: "/assets/reels/polo-watch.mp4",
     kind: "video",
-    layout: "tall",
     year: "2026",
     copy: {
       de: {
@@ -327,7 +315,6 @@ const projects: Project[] = [
     cover: "/assets/reels/ustipci.jpg",
     video: "/assets/reels/ustipci.mp4",
     kind: "video",
-    layout: "tall",
     year: "2026",
     copy: {
       de: {
@@ -346,17 +333,61 @@ const projects: Project[] = [
   },
 ];
 
+const categories = [
+  { id: "fahrzeuge", title: "Fahrzeuge", cover: "porsche-circuit-motion", projects: ["porsche-circuit-motion", "golf-vi-gti", "toyota-rav4-open-horizon", "porsche-geometry", "salzburgring-before-the-corner", "bmw-speed-study", "track-pulse", "kia-beyond-the-road"] },
+  { id: "produkte", title: "Produktaufnahmen", cover: "polo-watch", projects: ["polo-watch"] },
+  { id: "kulinarik", title: "Kulinarik", cover: "ustipci", projects: ["ustipci"] },
+  { id: "portraets", title: "Porträts", cover: "winter-portrait", projects: ["winter-portrait"] },
+  { id: "film", title: "Film", cover: "golf-vi-gti", projects: ["golf-vi-gti", "polo-watch", "ustipci"] },
+  { id: "landschaften", title: "Landschaften", cover: "eclipse-afterlight", projects: ["eclipse-afterlight", "monument-under-stars"] },
+];
+
+const projectById = new Map(projects.map((project) => [project.id, project] as const));
+
+function Filmstrip({ children, id, label, count }: {
+  children: ReactNode;
+  id: string;
+  label: string;
+  count: number;
+}) {
+  const strip = useRef<HTMLDivElement>(null);
+  const move = (direction: number) => {
+    const row = strip.current;
+    if (row) row.scrollBy({ left: direction * row.clientWidth });
+  };
+
+  return (
+    <div className="ee-filmstrip">
+      <div className="ee-filmstrip-perforation" aria-hidden="true" />
+      <div className="ee-filmstrip-row" id={id} ref={strip} role="group" aria-label={label} tabIndex={count > 1 ? 0 : undefined}>
+        {children}
+      </div>
+      <div className="ee-filmstrip-perforation" aria-hidden="true" />
+      {count > 1 && (
+        <div className={`ee-filmstrip-controls ee-filmstrip-controls--${count > 3 ? "many" : count}`}>
+          <button type="button" aria-label={`${label}: zurückblättern`} aria-controls={id} onClick={() => move(-1)}>←</button>
+          <button type="button" aria-label={`${label}: weiterblättern`} aria-controls={id} onClick={() => move(1)}>→</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FilmFrame({ project, alt = "", sizes = PROJECT_IMAGE_SIZES }: { project: Project; alt?: string; sizes?: string }) {
+  const smallImage = isSmallImage(project.cover);
+  return (
+    <div className={`ee-project-media${smallImage ? " ee-project-media--native" : ""}`}>
+      <Image src={project.cover} alt={alt} fill quality={95} unoptimized={smallImage || project.cover === YOUTUBE_THUMBNAIL_URL} sizes={sizes} />
+    </div>
+  );
+}
+
 const ui = {
   de: {
     nav: ["Projekte", "Profil", "Leistungen", "Kontakt"],
-    heroRole: "Photography · Film · Visual Content",
-    heroLine: "Visuelle Geschichten für Fahrzeuge, Marken und Menschen.",
-    heroCta: "Projekte entdecken",
-    scroll: "Scroll to explore",
-    projectsEyebrow: "Selected work · 2026",
-    projectsTitle: "Ein Portfolio. Keine Ablenkung.",
-    projectsIntro:
-      "Automotive, Bewegung, Landschaft und Portrait — alle Arbeiten auf einer Seite, als visuelle Projekte statt Social-Media-Feed.",
+    heroLine: "Fotografie & Film aus Augsburg",
+    heroPortrait: "Schwarz-Weiß-Porträt von Dzenad Cakic vor roten REC-Buchstaben",
+    projectsTitle: "Ausgewählte Arbeiten",
     openProject: "Projekt öffnen",
     aboutEyebrow: "Profil",
     aboutTitle: "Technische Präzision. Echte Atmosphäre.",
@@ -389,14 +420,9 @@ const ui = {
   },
   en: {
     nav: ["Projects", "Profile", "Services", "Contact"],
-    heroRole: "Photography · Film · Visual Content",
-    heroLine: "Visual stories for vehicles, brands and people.",
-    heroCta: "Explore the work",
-    scroll: "Scroll to explore",
-    projectsEyebrow: "Selected work · 2026",
-    projectsTitle: "One portfolio. No distraction.",
-    projectsIntro:
-      "Automotive, movement, landscape and portrait — every piece on one page, presented as visual projects rather than a social feed.",
+    heroLine: "Photography & Film from Augsburg",
+    heroPortrait: "Black-and-white portrait of Dzenad Cakic in front of red REC lettering",
+    projectsTitle: "Selected work",
     openProject: "Open project",
     aboutEyebrow: "Profile",
     aboutTitle: "Technical precision. Real atmosphere.",
@@ -448,73 +474,16 @@ function BrandLogo({ priority = false }: { priority?: boolean }) {
 
 export default function Home() {
   const [language, setLanguage] = useState<Language>("de");
-  const [menuOpen, setMenuOpen] = useState(false);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [activeSlide, setActiveSlide] = useState(0);
   const [cookieOpen, setCookieOpen] = useState(false);
   const t = ui[language];
 
   useEffect(() => {
-    const root = document.documentElement;
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const progress = Math.min(1, Math.max(0, window.scrollY / Math.max(window.innerHeight, 1)));
-      root.style.setProperty("--ee-hero-progress", progress.toFixed(4));
-      root.style.setProperty("--ee-hero-scale", (1.035 + progress * 0.13).toFixed(4));
-      root.style.setProperty("--ee-hero-y", `${(progress * 4.5).toFixed(2)}vh`);
-      root.style.setProperty("--ee-hero-copy-y", `${(progress * -11).toFixed(2)}vh`);
-      root.style.setProperty("--ee-hero-copy-opacity", Math.max(0.12, 1 - progress * 1.1).toFixed(4));
-      document.body.classList.toggle("ee-has-scrolled", window.scrollY > 40);
-    };
-    const requestUpdate = () => {
-      if (!frame) frame = window.requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
-    return () => {
-      if (frame) window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
-      root.style.removeProperty("--ee-hero-progress");
-      root.style.removeProperty("--ee-hero-scale");
-      root.style.removeProperty("--ee-hero-y");
-      root.style.removeProperty("--ee-hero-copy-y");
-      root.style.removeProperty("--ee-hero-copy-opacity");
-      document.body.classList.remove("ee-has-scrolled");
-    };
-  }, []);
-
-  useEffect(() => {
-    const cursor = document.querySelector<HTMLElement>(".ee-cursor");
-    if (!cursor || !window.matchMedia("(pointer: fine)").matches) return;
-    const move = (event: PointerEvent) => {
-      cursor.style.setProperty("--cursor-x", `${event.clientX}px`);
-      cursor.style.setProperty("--cursor-y", `${event.clientY}px`);
-      cursor.classList.add("is-visible");
-    };
-    const over = (event: PointerEvent) => {
-      const target = event.target as HTMLElement;
-      cursor.classList.toggle("is-active", Boolean(target.closest("a, button")));
-    };
-    const leave = () => cursor.classList.remove("is-visible");
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerover", over);
-    document.documentElement.addEventListener("mouseleave", leave);
-    return () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerover", over);
-      document.documentElement.removeEventListener("mouseleave", leave);
-    };
-  }, []);
-
-  useEffect(() => {
     document.documentElement.lang = language;
-    document.body.classList.toggle("ee-overlay-open", menuOpen || Boolean(activeProject));
+    document.body.classList.toggle("ee-overlay-open", Boolean(activeProject));
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setMenuOpen(false);
         setActiveProject(null);
         setCookieOpen(false);
       }
@@ -524,7 +493,7 @@ export default function Home() {
       window.removeEventListener("keydown", onKeyDown);
       document.body.classList.remove("ee-overlay-open");
     };
-  }, [activeProject, language, menuOpen]);
+  }, [activeProject, language]);
 
   const openProject = (project: Project) => {
     setActiveSlide(0);
@@ -536,89 +505,73 @@ export default function Home() {
 
   return (
     <main className="ee-site">
-      <div className="ee-cursor" aria-hidden="true"><span /></div>
-
-      <header className="ee-header">
-        <a className="ee-brand" href="#top" aria-label="E&E Visuals home">
-          <BrandLogo priority />
-          <span>E&amp;E Visuals</span>
-        </a>
-        <nav className="ee-nav" aria-label="Primary navigation">
-          {t.nav.map((label, index) => (
-            <a href={`#${navTargets[index]}`} key={navTargets[index]}>{label}</a>
-          ))}
-        </nav>
-        <div className="ee-header-actions">
-          <div className="ee-language" aria-label="Language">
+      <header className="ee-hero" id="top" aria-labelledby="ee-hero-title">
+        <div className="ee-hero-copy">
+          <h1 id="ee-hero-title">E&amp;E Visuals</h1>
+          <p>{t.heroLine}</p>
+        </div>
+        <div className="ee-masthead-nav">
+          <div className="ee-language" aria-label={language === "de" ? "Sprache" : "Language"}>
             {(["de", "en"] as Language[]).map((item) => (
-              <button className={language === item ? "is-active" : ""} key={item} onClick={() => setLanguage(item)} type="button" aria-pressed={language === item}>
+              <button key={item} onClick={() => setLanguage(item)} type="button" aria-pressed={language === item}>
                 {item.toUpperCase()}
               </button>
             ))}
           </div>
-          <button className="ee-menu-toggle" type="button" onClick={() => setMenuOpen((value) => !value)} aria-expanded={menuOpen} aria-controls="ee-mobile-menu">
-            <span /><span /><small>{menuOpen ? "Close" : "Menu"}</small>
-          </button>
+          <nav className="ee-nav" aria-label={language === "de" ? "Hauptnavigation" : "Primary navigation"}>
+            {[0, 1, 3].map((index) => (
+              <a href={`#${navTargets[index]}`} key={navTargets[index]}>{t.nav[index]}</a>
+            ))}
+          </nav>
+        </div>
+        <div className="ee-hero-art">
+          <Image className="ee-hero-portrait" src={REC_PORTRAIT} alt={t.heroPortrait}
+            width={1254} height={1254} sizes="(max-width: 700px) 25vw, 19vw" quality={95} preload />
         </div>
       </header>
 
-      <aside className={`ee-mobile-menu ${menuOpen ? "is-open" : ""}`} id="ee-mobile-menu" aria-hidden={!menuOpen}>
-        <nav>
-          {t.nav.map((label, index) => (
-            <a href={`#${navTargets[index]}`} key={navTargets[index]} onClick={() => setMenuOpen(false)}>
-              <span>0{index + 1}</span>{label}
-            </a>
-          ))}
-        </nav>
-        <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer">Instagram ↗</a>
-      </aside>
-
-      <section className="ee-hero" id="top" aria-labelledby="ee-hero-title">
-        <div className="ee-hero-media" aria-hidden="true">
-          <Image src={YOUTUBE_THUMBNAIL_URL} alt="" fill priority fetchPriority="high" unoptimized />
-        </div>
-        <div className="ee-hero-shade" aria-hidden="true" />
-        <div className="ee-hero-copy">
-          <p>{t.heroRole}</p>
-          <h1 id="ee-hero-title"><span>E&amp;E</span> Visuals</h1>
-          <div className="ee-hero-bottom">
-            <p>{t.heroLine}</p>
-            <a href="#projects">{t.heroCta}<span>↓</span></a>
-          </div>
-        </div>
-        <button className="ee-hero-play" type="button" onClick={() => openProject(projects[0])}>
-          <span>Latest film</span><strong>Golf VI GTI</strong><i>▶</i>
-        </button>
-        <div className="ee-scroll-cue" aria-hidden="true"><span>{t.scroll}</span><i /></div>
-      </section>
-
       <section className="ee-projects" id="projects" aria-labelledby="ee-projects-title">
-        <div className="ee-section-head">
-          <p>{t.projectsEyebrow}</p>
-          <div>
-            <h2 id="ee-projects-title">{t.projectsTitle}</h2>
-            <p>{t.projectsIntro}</p>
-          </div>
-        </div>
-        <div className="ee-project-grid">
-          {projects.map((project, index) => {
-            const copy = project.copy[language];
-            const smallImage = isSmallImage(project.cover);
+        <h2 className="ee-sheet-heading" id="ee-projects-title"><span>{t.projectsTitle}</span></h2>
+        <nav className="ee-category-index" id="kategorien" aria-label="Projektkategorien" lang="de">
+          {categories.map((category, index) => {
+            const cover = projectById.get(category.cover)!;
             return (
-              <article className={`ee-project ee-project--${project.layout}`} key={project.id}>
-                <button type="button" onClick={() => openProject(project)} aria-label={`${t.openProject}: ${copy.title}`}>
-                  <figure className={`ee-project-media${smallImage ? " ee-project-media--native" : ""}`}>
-                    <Image src={project.cover} alt={`${copy.title} — ${copy.category}`} fill quality={95} unoptimized={smallImage || project.cover === YOUTUBE_THUMBNAIL_URL} sizes={`(max-width: 760px) 100vw, ${projectImageSizes[index] ?? 50}vw`} loading={index < 3 ? "eager" : "lazy"} />
-                    <span className="ee-project-number">{String(index + 1).padStart(2, "0")}</span>
-                    <figcaption>
-                      <p>{copy.category}</p><h3>{copy.title}</h3><span>{t.openProject} ↗</span>
-                    </figcaption>
-                  </figure>
-                  <div className="ee-project-meta"><span>{copy.location}</span><span>{project.year}</span></div>
-                </button>
-              </article>
+              <a className="ee-filmstrip-card ee-category-card" href={`#${category.id}`} key={category.id} lang="de">
+                <FilmFrame project={cover} sizes={CATEGORY_IMAGE_SIZES} />
+                <span className="ee-filmstrip-caption">
+                  <span className="ee-project-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                  <span>{category.title}</span><span aria-hidden="true">↓</span>
+                </span>
+              </a>
             );
           })}
+        </nav>
+
+        <div className="ee-category-list">
+          {categories.map((category) => (
+            <section className="ee-category" id={category.id} tabIndex={-1} key={category.id} aria-labelledby={`${category.id}-titel`}>
+              <div className="ee-category-heading" lang="de">
+                <h3 id={`${category.id}-titel`}>{category.title}</h3>
+                <a href="#projects">Alle Kategorien <span aria-hidden="true">↑</span></a>
+              </div>
+              <Filmstrip id={`${category.id}-streifen`} label={category.title} count={category.projects.length}>
+                {category.projects.map((id, index) => {
+                  const project = projectById.get(id)!;
+                  const copy = project.copy[language];
+                  return (
+                    <button type="button" className="ee-filmstrip-card" key={id} onClick={() => openProject(project)}
+                      aria-label={`${t.openProject}: ${copy.title}`}>
+                      <FilmFrame project={project} alt={copy.title} />
+                      <span className="ee-filmstrip-caption">
+                        <span className="ee-project-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                        <span>{copy.title}</span><span aria-hidden="true">{project.kind === "video" ? "▶" : "↗"}</span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </Filmstrip>
+            </section>
+          ))}
         </div>
       </section>
 
@@ -655,7 +608,7 @@ export default function Home() {
       <footer className="ee-footer">
         <div className="ee-footer-brand"><BrandLogo /><p><strong>E&amp;E Visuals</strong><span>Dzenad Cakic · Augsburg</span></p></div>
         <div className="ee-footer-links">
-          <a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a>
+          <a href="#services">{t.nav[2]}</a><a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a>
           <button type="button" onClick={() => setCookieOpen(true)}>{t.cookieButton}</button>
           <a href="#top">{t.backTop} ↑</a>
         </div>
