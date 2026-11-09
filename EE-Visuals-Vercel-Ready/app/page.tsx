@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 type Language = "de" | "en";
 type ProjectKind = "image" | "gallery" | "video";
@@ -32,7 +32,7 @@ const YOUTUBE_THUMBNAIL_URL =
 const BRAND_LOGO = "/assets/brand/eevisuals-logo-instagram.jpg";
 
 const REC_PORTRAIT = "/assets/profile/dzenad-rec.webp";
-const PROJECT_IMAGE_SIZES = "(max-width: 600px) 94vw, (max-width: 900px) 46vw, 354px";
+const PROJECT_IMAGE_SIZES = "(max-width: 600px) 78vw, (max-width: 900px) 47vw, (max-width: 1440px) 32vw, 474px";
 
 function isSmallImage(source: string) {
   return source.startsWith("/assets/instagram/instagram-") ||
@@ -332,17 +332,62 @@ const projects: Project[] = [
   },
 ];
 
+const categories = [
+  { id: "produkte", title: "Produktaufnahmen", cover: "polo-watch", projects: ["polo-watch"] },
+  { id: "fahrzeuge", title: "Fahrzeuge", cover: "porsche-circuit-motion", projects: ["porsche-circuit-motion", "golf-vi-gti", "toyota-rav4-open-horizon", "porsche-geometry", "salzburgring-before-the-corner", "bmw-speed-study", "track-pulse", "kia-beyond-the-road"] },
+  { id: "kulinarik", title: "Kulinarik", cover: "ustipci", projects: ["ustipci"] },
+  { id: "portraets", title: "Porträts", cover: "winter-portrait", projects: ["winter-portrait"] },
+  { id: "film", title: "Film", cover: "golf-vi-gti", projects: ["golf-vi-gti", "polo-watch", "ustipci"] },
+  { id: "landschaften", title: "Landschaften", cover: "eclipse-afterlight", projects: ["eclipse-afterlight", "monument-under-stars"] },
+];
+
+const projectById = new Map(projects.map((project) => [project.id, project] as const));
+
+function Filmstrip({ children, id, label, count }: {
+  children: ReactNode;
+  id: string;
+  label: string;
+  count: number;
+}) {
+  const strip = useRef<HTMLDivElement>(null);
+  const move = (direction: number) => {
+    const row = strip.current;
+    if (row) row.scrollBy({ left: direction * row.clientWidth });
+  };
+
+  return (
+    <div className="ee-filmstrip">
+      <div className="ee-filmstrip-perforation" aria-hidden="true" />
+      <div className="ee-filmstrip-row" id={id} ref={strip} role="group" aria-label={label} tabIndex={count > 1 ? 0 : undefined}>
+        {children}
+      </div>
+      <div className="ee-filmstrip-perforation" aria-hidden="true" />
+      {count > 1 && (
+        <div className={`ee-filmstrip-controls ee-filmstrip-controls--${count > 3 ? "many" : count}`}>
+          <button type="button" aria-label={`${label}: zurückblättern`} aria-controls={id} onClick={() => move(-1)}>←</button>
+          <button type="button" aria-label={`${label}: weiterblättern`} aria-controls={id} onClick={() => move(1)}>→</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FilmFrame({ project, index, alt = "" }: { project: Project; index: number; alt?: string }) {
+  const smallImage = isSmallImage(project.cover);
+  return (
+    <div className={`ee-project-media${smallImage ? " ee-project-media--native" : ""}`}>
+      <Image src={project.cover} alt={alt} fill quality={95} unoptimized={smallImage || project.cover === YOUTUBE_THUMBNAIL_URL} sizes={PROJECT_IMAGE_SIZES} />
+      <span className="ee-project-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+    </div>
+  );
+}
+
 const ui = {
   de: {
     nav: ["Projekte", "Profil", "Leistungen", "Kontakt"],
-    heroRole: "Photography · Film · Visual Content",
-    heroLine: "Visuelle Geschichten für Fahrzeuge, Marken und Menschen.",
-    heroCta: "Projekte entdecken",
+    heroLine: "Fotografie & Film aus Augsburg",
     heroPortrait: "Schwarz-Weiß-Porträt von Dzenad Cakic vor roten REC-Buchstaben",
-    projectsEyebrow: "Selected work · 2026",
-    projectsTitle: "Ein Portfolio. Keine Ablenkung.",
-    projectsIntro:
-      "Automotive, Bewegung, Landschaft und Portrait — alle Arbeiten auf einer Seite, als visuelle Projekte statt Social-Media-Feed.",
+    projectsTitle: "Ausgewählte Arbeiten",
     openProject: "Projekt öffnen",
     aboutEyebrow: "Profil",
     aboutTitle: "Technische Präzision. Echte Atmosphäre.",
@@ -375,14 +420,9 @@ const ui = {
   },
   en: {
     nav: ["Projects", "Profile", "Services", "Contact"],
-    heroRole: "Photography · Film · Visual Content",
-    heroLine: "Visual stories for vehicles, brands and people.",
-    heroCta: "Explore the work",
+    heroLine: "Photography & Film from Augsburg",
     heroPortrait: "Black-and-white portrait of Dzenad Cakic in front of red REC lettering",
-    projectsEyebrow: "Selected work · 2026",
-    projectsTitle: "One portfolio. No distraction.",
-    projectsIntro:
-      "Automotive, movement, landscape and portrait — every piece on one page, presented as visual projects rather than a social feed.",
+    projectsTitle: "Selected work",
     openProject: "Open project",
     aboutEyebrow: "Profile",
     aboutTitle: "Technical precision. Real atmosphere.",
@@ -503,13 +543,12 @@ export default function Home() {
       <div className="ee-cursor" aria-hidden="true"><span /></div>
 
       <header className="ee-header">
-        <a className="ee-brand" href="#top" aria-label="E&E Visuals home">
-          <BrandLogo priority />
+        <a className="ee-brand ee-wordmark" href="#top" aria-label="E&E Visuals">
           <span>E&amp;E Visuals</span>
         </a>
         <nav className="ee-nav" aria-label="Primary navigation">
           {t.nav.map((label, index) => (
-            <a href={`#${navTargets[index]}`} key={navTargets[index]}>{label}</a>
+            <a href={`#${navTargets[index]}`} key={navTargets[index]} className={index === 0 ? "ee-nav-featured" : undefined}>{label}</a>
           ))}
         </nav>
         <div className="ee-header-actions">
@@ -538,60 +577,54 @@ export default function Home() {
       </aside>
 
       <section className="ee-hero" id="top" aria-labelledby="ee-hero-title">
-        <div className="ee-hero-inner">
-          <div className="ee-hero-copy">
-            <p>{t.heroRole}</p>
-            <h1 id="ee-hero-title"><span>E&amp;E</span> Visuals</h1>
-            <p className="ee-hero-name">Dzenad Cakic · Augsburg</p>
-            <div className="ee-hero-bottom">
-              <p>{t.heroLine}</p>
-              <a href="#projects">{t.heroCta}<span aria-hidden="true">↓</span></a>
-            </div>
-          </div>
-          <Image
-            className="ee-hero-portrait"
-            src={REC_PORTRAIT}
-            alt={t.heroPortrait}
-            width={1254}
-            height={1254}
-            sizes="(max-width: 600px) 240px, 320px"
-            quality={95}
-            preload
-          />
+        <div className="ee-hero-art">
+          <Image className="ee-hero-portrait" src={REC_PORTRAIT} alt={t.heroPortrait}
+            width={1254} height={1254} sizes="(max-width: 600px) 92vw, (max-width: 1400px) 57vw, 840px" quality={95} preload />
+        </div>
+        <div className="ee-hero-copy">
+          <h1 id="ee-hero-title">E&amp;E Visuals</h1>
+          <p>{t.heroLine}</p>
         </div>
       </section>
 
       <section className="ee-projects" id="projects" aria-labelledby="ee-projects-title">
-        <div className="ee-section-head">
-          <p>{t.projectsEyebrow}</p>
-          <div>
-            <h2 id="ee-projects-title">{t.projectsTitle}</h2>
-            <p>{t.projectsIntro}</p>
-          </div>
-        </div>
-        <div className="ee-project-grid">
-          {projects.map((project, index) => {
-            const copy = project.copy[language];
-            const smallImage = isSmallImage(project.cover);
+        <h2 id="ee-projects-title">{t.projectsTitle}</h2>
+        <Filmstrip id="kategorien" label="Projektkategorien" count={categories.length}>
+          {categories.map((category, index) => {
+            const cover = projectById.get(category.cover)!;
             return (
-              <article className="ee-project" key={project.id}>
-                <button type="button" onClick={() => openProject(project)} aria-label={`${t.openProject}: ${copy.title}`}>
-                  <figure>
-                    <div className={`ee-project-media${smallImage ? " ee-project-media--native" : ""}`}>
-                      <Image src={project.cover} alt={`${copy.title} — ${copy.category}`} fill quality={95} unoptimized={smallImage || project.cover === YOUTUBE_THUMBNAIL_URL} sizes={PROJECT_IMAGE_SIZES} />
-                      <span className="ee-project-number">{String(index + 1).padStart(2, "0")}</span>
-                    </div>
-                    <figcaption>
-                      <p>{copy.category}</p>
-                      <h3>{copy.title}</h3>
-                      <span aria-hidden="true">↗</span>
-                    </figcaption>
-                  </figure>
-                  <div className="ee-project-meta"><span>{copy.location}</span><span>{project.year}</span></div>
-                </button>
-              </article>
+              <a className="ee-filmstrip-card ee-category-card" href={`#${category.id}`} key={category.id} lang="de">
+                <FilmFrame project={cover} index={index} />
+                <span className="ee-filmstrip-caption"><span>{category.title}</span><span aria-hidden="true">↓</span></span>
+              </a>
             );
           })}
+        </Filmstrip>
+
+        <div className="ee-category-list">
+          {categories.map((category) => (
+            <section className="ee-category" id={category.id} tabIndex={-1} key={category.id} aria-labelledby={`${category.id}-titel`}>
+              <div className="ee-category-heading" lang="de">
+                <h3 id={`${category.id}-titel`}>{category.title}</h3>
+                <a href="#projects">Alle Kategorien <span aria-hidden="true">↑</span></a>
+              </div>
+              <Filmstrip id={`${category.id}-streifen`} label={category.title} count={category.projects.length}>
+                {category.projects.map((id, index) => {
+                  const project = projectById.get(id)!;
+                  const copy = project.copy[language];
+                  return (
+                    <button type="button" className="ee-filmstrip-card" key={id} onClick={() => openProject(project)}
+                      aria-label={`${t.openProject}: ${copy.title}`}>
+                      <FilmFrame project={project} index={index} alt={copy.title} />
+                      <span className="ee-filmstrip-caption">
+                        <span>{copy.title}</span><span aria-hidden="true">{project.kind === "video" ? "▶" : "↗"}</span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </Filmstrip>
+            </section>
+          ))}
         </div>
       </section>
 

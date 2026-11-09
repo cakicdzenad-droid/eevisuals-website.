@@ -12,7 +12,6 @@ export default function MotionDirector() {
 
     const revealSelectors = [
       ".ee-section-head",
-      ".ee-project",
       ".ee-profile-image",
       ".ee-profile-copy",
       ".ee-service-list article",
@@ -50,7 +49,6 @@ export default function MotionDirector() {
     );
 
     const groupedSelectors = [
-      ".ee-project-grid",
       ".ee-service-list",
       ".project-grid",
       ".journal-grid",
