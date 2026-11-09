@@ -96,7 +96,7 @@ export default function MotionDirector() {
 
     const mediaElements = Array.from(
       document.querySelectorAll<HTMLElement>(
-        ".ee-project-media, .ee-profile-image, .project-card figure, .journal-card figure, .showreel__button, .about__portrait, .case-study-image",
+        ".ee-profile-image, .project-card figure, .journal-card figure, .showreel__button, .about__portrait, .case-study-image",
       ),
     );
     mediaElements.forEach((element) => element.classList.add("motion-media"));

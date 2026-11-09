@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 
 type Language = "de" | "en";
 type ProjectKind = "image" | "gallery" | "video";
-type ProjectLayout = "feature" | "wide" | "tall" | "square";
 
 type LocalizedProject = {
   category: string;
@@ -18,8 +17,8 @@ type Project = {
   id: string;
   cover: string;
   gallery?: string[];
+  video?: string;
   kind: ProjectKind;
-  layout: ProjectLayout;
   year: string;
   copy: Record<Language, LocalizedProject>;
 };
@@ -32,12 +31,19 @@ const YOUTUBE_THUMBNAIL_URL =
   "https://i.ytimg.com/vi/Wp6_leuJ854/maxresdefault.jpg";
 const BRAND_LOGO = "/assets/brand/eevisuals-logo-instagram.jpg";
 
+const REC_PORTRAIT = "/assets/profile/dzenad-rec.webp";
+const PROJECT_IMAGE_SIZES = "(max-width: 600px) 94vw, (max-width: 900px) 46vw, 354px";
+
+function isSmallImage(source: string) {
+  return source.startsWith("/assets/instagram/instagram-") ||
+    source.startsWith("/assets/reels/");
+}
+
 const projects: Project[] = [
   {
     id: "golf-vi-gti",
     cover: YOUTUBE_THUMBNAIL_URL,
     kind: "video",
-    layout: "feature",
     year: "2026",
     copy: {
       de: {
@@ -60,7 +66,6 @@ const projects: Project[] = [
     id: "porsche-circuit-motion",
     cover: "/assets/instagram/porsche-panning-01.jpg",
     kind: "image",
-    layout: "tall",
     year: "2026",
     copy: {
       de: {
@@ -89,7 +94,6 @@ const projects: Project[] = [
       "/assets/instagram/instagram-05-DbDOxllDDqT.jpg",
     ],
     kind: "gallery",
-    layout: "wide",
     year: "2026",
     copy: {
       de: {
@@ -112,7 +116,6 @@ const projects: Project[] = [
     id: "porsche-geometry",
     cover: "/assets/instagram/instagram-02-Dcnb7JLssy7.jpg",
     kind: "image",
-    layout: "square",
     year: "2026",
     copy: {
       de: {
@@ -135,7 +138,6 @@ const projects: Project[] = [
     id: "salzburgring-before-the-corner",
     cover: "/assets/instagram/instagram-03-DciKTSVs7Vu.jpg",
     kind: "image",
-    layout: "square",
     year: "2026",
     copy: {
       de: {
@@ -158,7 +160,6 @@ const projects: Project[] = [
     id: "bmw-speed-study",
     cover: "/assets/instagram/instagram-04-DcMLt2jMUjU.jpg",
     kind: "image",
-    layout: "wide",
     year: "2026",
     copy: {
       de: {
@@ -181,7 +182,6 @@ const projects: Project[] = [
     id: "track-pulse",
     cover: "/assets/instagram/instagram-06-DcYCo4_DA5T.jpg",
     kind: "image",
-    layout: "wide",
     year: "2026",
     copy: {
       de: {
@@ -204,7 +204,6 @@ const projects: Project[] = [
     id: "kia-beyond-the-road",
     cover: "/assets/instagram/instagram-07-DcJe2QKs-jk.jpg",
     kind: "image",
-    layout: "tall",
     year: "2026",
     copy: {
       de: {
@@ -227,7 +226,6 @@ const projects: Project[] = [
     id: "eclipse-afterlight",
     cover: "/assets/instagram/instagram-09-Db9NbNgMyw_.jpg",
     kind: "image",
-    layout: "tall",
     year: "2026",
     copy: {
       de: {
@@ -250,7 +248,6 @@ const projects: Project[] = [
     id: "winter-portrait",
     cover: "/assets/instagram/instagram-10-Db48n23DLE8.jpg",
     kind: "image",
-    layout: "square",
     year: "2026",
     copy: {
       de: {
@@ -273,7 +270,6 @@ const projects: Project[] = [
     id: "monument-under-stars",
     cover: "/assets/instagram/instagram-11-Db-KuIAM3lE.jpg",
     kind: "image",
-    layout: "wide",
     year: "2026",
     copy: {
       de: {
@@ -292,6 +288,48 @@ const projects: Project[] = [
       },
     },
   },
+  {
+    id: "polo-watch",
+    cover: "/assets/reels/polo-watch.jpg",
+    video: "/assets/reels/polo-watch.mp4",
+    kind: "video",
+    year: "2026",
+    copy: {
+      de: {
+        category: "Produktfilm",
+        title: "Polo Watch",
+        description: "Ein kurzer Produktfilm über das Zusammenspiel von Licht, Zifferblatt und Material.",
+        location: "",
+      },
+      en: {
+        category: "Product Film",
+        title: "Polo Watch",
+        description: "A short product film exploring light, the watch dial and its materials.",
+        location: "",
+      },
+    },
+  },
+  {
+    id: "ustipci",
+    cover: "/assets/reels/ustipci.jpg",
+    video: "/assets/reels/ustipci.mp4",
+    kind: "video",
+    year: "2026",
+    copy: {
+      de: {
+        category: "Food Film",
+        title: "Uštipci",
+        description: "Ein Food Reel über bosnisches Gebäck, vom Ausbacken in der Pfanne bis zum Servieren.",
+        location: "",
+      },
+      en: {
+        category: "Food Film",
+        title: "Uštipci",
+        description: "A food reel about Bosnian fritters, from frying to serving.",
+        location: "",
+      },
+    },
+  },
 ];
 
 const ui = {
@@ -300,7 +338,7 @@ const ui = {
     heroRole: "Photography · Film · Visual Content",
     heroLine: "Visuelle Geschichten für Fahrzeuge, Marken und Menschen.",
     heroCta: "Projekte entdecken",
-    scroll: "Scroll to explore",
+    heroPortrait: "Schwarz-Weiß-Porträt von Dzenad Cakic vor roten REC-Buchstaben",
     projectsEyebrow: "Selected work · 2026",
     projectsTitle: "Ein Portfolio. Keine Ablenkung.",
     projectsIntro:
@@ -340,7 +378,7 @@ const ui = {
     heroRole: "Photography · Film · Visual Content",
     heroLine: "Visual stories for vehicles, brands and people.",
     heroCta: "Explore the work",
-    scroll: "Scroll to explore",
+    heroPortrait: "Black-and-white portrait of Dzenad Cakic in front of red REC lettering",
     projectsEyebrow: "Selected work · 2026",
     projectsTitle: "One portfolio. No distraction.",
     projectsIntro:
@@ -403,33 +441,11 @@ export default function Home() {
   const t = ui[language];
 
   useEffect(() => {
-    const root = document.documentElement;
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const progress = Math.min(1, Math.max(0, window.scrollY / Math.max(window.innerHeight, 1)));
-      root.style.setProperty("--ee-hero-progress", progress.toFixed(4));
-      root.style.setProperty("--ee-hero-scale", (1.035 + progress * 0.13).toFixed(4));
-      root.style.setProperty("--ee-hero-y", `${(progress * 4.5).toFixed(2)}vh`);
-      root.style.setProperty("--ee-hero-copy-y", `${(progress * -11).toFixed(2)}vh`);
-      root.style.setProperty("--ee-hero-copy-opacity", Math.max(0.12, 1 - progress * 1.1).toFixed(4));
-      document.body.classList.toggle("ee-has-scrolled", window.scrollY > 40);
-    };
-    const requestUpdate = () => {
-      if (!frame) frame = window.requestAnimationFrame(update);
-    };
+    const update = () => document.body.classList.toggle("ee-has-scrolled", window.scrollY > 40);
     update();
-    window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
+    window.addEventListener("scroll", update, { passive: true });
     return () => {
-      if (frame) window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
-      root.style.removeProperty("--ee-hero-progress");
-      root.style.removeProperty("--ee-hero-scale");
-      root.style.removeProperty("--ee-hero-y");
-      root.style.removeProperty("--ee-hero-copy-y");
-      root.style.removeProperty("--ee-hero-copy-opacity");
+      window.removeEventListener("scroll", update);
       document.body.classList.remove("ee-has-scrolled");
     };
   }, []);
@@ -522,22 +538,27 @@ export default function Home() {
       </aside>
 
       <section className="ee-hero" id="top" aria-labelledby="ee-hero-title">
-        <div className="ee-hero-media" aria-hidden="true">
-          <Image src={YOUTUBE_THUMBNAIL_URL} alt="" fill priority fetchPriority="high" quality={95} sizes="100vw" />
-        </div>
-        <div className="ee-hero-shade" aria-hidden="true" />
-        <div className="ee-hero-copy">
-          <p>{t.heroRole}</p>
-          <h1 id="ee-hero-title"><span>E&amp;E</span> Visuals</h1>
-          <div className="ee-hero-bottom">
-            <p>{t.heroLine}</p>
-            <a href="#projects">{t.heroCta}<span>↓</span></a>
+        <div className="ee-hero-inner">
+          <div className="ee-hero-copy">
+            <p>{t.heroRole}</p>
+            <h1 id="ee-hero-title"><span>E&amp;E</span> Visuals</h1>
+            <p className="ee-hero-name">Dzenad Cakic · Augsburg</p>
+            <div className="ee-hero-bottom">
+              <p>{t.heroLine}</p>
+              <a href="#projects">{t.heroCta}<span aria-hidden="true">↓</span></a>
+            </div>
           </div>
+          <Image
+            className="ee-hero-portrait"
+            src={REC_PORTRAIT}
+            alt={t.heroPortrait}
+            width={1254}
+            height={1254}
+            sizes="(max-width: 600px) 240px, 320px"
+            quality={95}
+            preload
+          />
         </div>
-        <button className="ee-hero-play" type="button" onClick={() => openProject(projects[0])}>
-          <span>Latest film</span><strong>Golf VI GTI</strong><i>▶</i>
-        </button>
-        <div className="ee-scroll-cue" aria-hidden="true"><span>{t.scroll}</span><i /></div>
       </section>
 
       <section className="ee-projects" id="projects" aria-labelledby="ee-projects-title">
@@ -551,14 +572,19 @@ export default function Home() {
         <div className="ee-project-grid">
           {projects.map((project, index) => {
             const copy = project.copy[language];
+            const smallImage = isSmallImage(project.cover);
             return (
-              <article className={`ee-project ee-project--${project.layout}`} key={project.id}>
+              <article className="ee-project" key={project.id}>
                 <button type="button" onClick={() => openProject(project)} aria-label={`${t.openProject}: ${copy.title}`}>
-                  <figure className="ee-project-media">
-                    <Image src={project.cover} alt={`${copy.title} — ${copy.category}`} fill quality={project.id === "golf-vi-gti" ? 95 : undefined} sizes={project.layout === "feature" ? "100vw" : "(max-width: 760px) 100vw, 50vw"} loading={index < 3 ? "eager" : "lazy"} />
-                    <span className="ee-project-number">{String(index + 1).padStart(2, "0")}</span>
+                  <figure>
+                    <div className={`ee-project-media${smallImage ? " ee-project-media--native" : ""}`}>
+                      <Image src={project.cover} alt={`${copy.title} — ${copy.category}`} fill quality={95} unoptimized={smallImage || project.cover === YOUTUBE_THUMBNAIL_URL} sizes={PROJECT_IMAGE_SIZES} />
+                      <span className="ee-project-number">{String(index + 1).padStart(2, "0")}</span>
+                    </div>
                     <figcaption>
-                      <p>{copy.category}</p><h3>{copy.title}</h3><span>{t.openProject} ↗</span>
+                      <p>{copy.category}</p>
+                      <h3>{copy.title}</h3>
+                      <span aria-hidden="true">↗</span>
                     </figcaption>
                   </figure>
                   <div className="ee-project-meta"><span>{copy.location}</span><span>{project.year}</span></div>
@@ -571,7 +597,7 @@ export default function Home() {
 
       <section className="ee-profile" id="profile" aria-labelledby="ee-profile-title">
         <div className="ee-profile-image">
-          <Image src="/assets/instagram/porsche-panning-01.jpg" alt="Klassischer Porsche auf der Rennstrecke" fill sizes="(max-width: 760px) 100vw, 50vw" />
+          <Image src="/assets/instagram/porsche-panning-01.jpg" alt="Klassischer Porsche auf der Rennstrecke" fill quality={95} sizes="(max-width: 760px) 100vw, 58vw" />
           <span>E&amp;E / 01</span>
         </div>
         <div className="ee-profile-copy">
@@ -615,10 +641,12 @@ export default function Home() {
           <div className="ee-modal-panel">
             <button className="ee-modal-close" type="button" onClick={() => setActiveProject(null)} aria-label={t.close}>×</button>
             <div className="ee-modal-visual">
-              {activeProject.kind === "video" ? (
+              {activeProject.video ? (
+                <video src={activeProject.video} poster={activeProject.cover} aria-label={projectCopy.title} controls playsInline preload="metadata" />
+              ) : activeProject.kind === "video" ? (
                 <iframe src={YOUTUBE_EMBED_URL} title={projectCopy.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />
               ) : (
-                <Image src={slides[activeSlide]} alt={projectCopy.title} fill sizes="(max-width: 900px) 100vw, 72vw" priority />
+                <Image className={isSmallImage(slides[activeSlide]) ? "ee-modal-image--native" : undefined} src={slides[activeSlide]} alt={projectCopy.title} fill sizes="(max-width: 760px) 100vw, 72vw" quality={95} unoptimized={isSmallImage(slides[activeSlide])} priority />
               )}
               {slides.length > 1 && (
                 <div className="ee-modal-controls">
@@ -631,7 +659,7 @@ export default function Home() {
             <div className="ee-modal-copy">
               <p>{projectCopy.category} · {activeProject.year}</p><h2 id="ee-modal-title">{projectCopy.title}</h2><p>{projectCopy.description}</p>
               <div><span>{projectCopy.location}</span><span>{activeProject.kind === "video" ? t.watch : activeProject.kind === "gallery" ? t.gallery : t.image}</span></div>
-              {activeProject.kind === "video" && <a href={YOUTUBE_URL} target="_blank" rel="noreferrer">YouTube ↗</a>}
+              {activeProject.kind === "video" && !activeProject.video && <a href={YOUTUBE_URL} target="_blank" rel="noreferrer">YouTube ↗</a>}
             </div>
           </div>
         </div>
